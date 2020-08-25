@@ -10,19 +10,52 @@ class Hangman
   end
 
   def game
-    until number_of_attempts <= 0 do
+    update_display
+    until number_of_attempts <= 0 || word == revealed_word do
+      player_turn
       update_display
+    end
+
+    if word == revealed_word
+      puts "GAME OVER. You Win!"
+    else
+      puts "GAME OVER. You Lose..."
     end
   end
 
   private
 
-  attr_reader :revealed_word, :incorrect_guesses, :number_of_attempts
+  attr_accessor :number_of_attempts
+  attr_reader :word, :revealed_word, :incorrect_guesses
 
   def update_display
     puts revealed_word.join(" ")
     puts "Incorrect guesses: #{incorrect_guesses.join(", ")}"
     puts "Number of attempts left: #{number_of_attempts}"
+    puts ""
+  end
+
+  def player_turn
+    print "Make your guess: "
+    guess = gets.chomp
+    puts ""
+
+    is_guess_correct = false
+    word.each_with_index do |character, index|
+      if character == guess
+        revealed_word[index] = character 
+        is_guess_correct = true
+      end
+    end
+
+    if is_guess_correct
+      puts "Your guess was right!"
+    else
+      puts "Your guess was wrong..."
+      self.number_of_attempts -= 1
+      incorrect_guesses.push(guess)
+    end
+    
     puts ""
   end
 
