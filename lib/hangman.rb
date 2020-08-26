@@ -13,10 +13,7 @@ class Hangman
   end
 
   def game
-    puts "Welcome to Hangman!"
-    puts ""
-    puts "A random word has been chosen."
-    puts ""
+    begin_game
 
     update_display
     until number_of_attempts <= 0 || word == revealed_word do
@@ -24,13 +21,7 @@ class Hangman
       update_display
     end
 
-    if word == revealed_word
-      puts "GAME OVER. You Win!"
-    else
-      puts "GAME OVER. You Lose..."
-    end
-
-    puts "The word is \"#{word.join}\""
+    game_over
   end
 
   private
@@ -48,6 +39,13 @@ class Hangman
     end
     
     return new_word.split(//)
+  end
+
+  def begin_game
+    puts "Welcome to Hangman!"
+    puts ""
+    puts "A random word has been chosen."
+    puts ""
   end
 
   def update_display
@@ -95,7 +93,16 @@ class Hangman
     puts ""
   end
 
+  def game_over
+    if word == revealed_word
+      puts "GAME OVER. You Win!"
+    else
+      puts "GAME OVER. You Lose..."
+    end
+
+    puts "The word is \"#{word.join}\""
+  end
 end
 
-hangman = Hangman.new("5desk.txt", 5)
+hangman = Hangman.new("5desk.txt", 8)
 hangman.game
