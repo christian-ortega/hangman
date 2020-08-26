@@ -36,10 +36,20 @@ class Hangman
   end
 
   def player_turn
-    print "Make your guess: "
-    guess = gets.chomp
-    puts ""
+    guess = ""
 
+    loop do
+      print "Make your guess: "
+      guess = gets.chomp.downcase
+      puts ""
+      break unless revealed_word.include?(guess) || 
+                incorrect_guesses.include?(guess) || 
+                guess.length != 1 || 
+                !(guess =~ /[a-z]/) 
+      puts "Invalid Entry! Try again."
+			puts ""
+    end
+    
     is_guess_correct = false
     word.each_with_index do |character, index|
       if character == guess
