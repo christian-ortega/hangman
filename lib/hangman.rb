@@ -46,6 +46,7 @@ class Hangman
       guess = gets.chomp.downcase
       puts ""
       break unless revealed_word.include?(guess) || 
+                revealed_word.include?(guess.upcase) ||
                 incorrect_guesses.include?(guess) || 
                 guess.length != 1 || 
                 !(guess =~ /[a-z]/) 
@@ -55,7 +56,7 @@ class Hangman
     
     is_guess_correct = false
     word.each_with_index do |character, index|
-      if character == guess
+      if character.downcase == guess
         revealed_word[index] = character 
         is_guess_correct = true
       end
@@ -74,5 +75,5 @@ class Hangman
 
 end
 
-hangman = Hangman.new("sapphire", 5)
+hangman = Hangman.new("Sapphire", 5)
 hangman.game
