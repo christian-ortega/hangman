@@ -10,6 +10,9 @@ class Hangman
   end
 
   def game
+    puts "Welcome to Hangman!"
+    puts ""
+    
     update_display
     until number_of_attempts <= 0 || word == revealed_word do
       player_turn
