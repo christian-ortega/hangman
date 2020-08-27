@@ -1,7 +1,7 @@
 # hangman
 THE ODIN PROJECT: FILE I/O AND SERIALIZATION
 
-### Hangman ([View in Repl.it]) (https://repl.it/@chrisortegax/hangman#lib/hangman.rb)
+### Hangman ([View in Repl.it](https://repl.it/@chrisortegax/hangman#lib/hangman.rb))
 
 This is a command-line interface implementation of the classic game of Hangman.
 
