@@ -5,6 +5,8 @@ class Hangman
 
   public
 
+  attr_reader :word, :revealed_word, :incorrect_guesses, :number_of_attempts
+
   def initialize(filename, number_of_attempts)
     @word = random_word_from_file(filename)
     @revealed_word = Array.new(word.length, "_")
@@ -26,8 +28,7 @@ class Hangman
 
   private
 
-  attr_accessor :number_of_attempts
-  attr_reader :word, :revealed_word, :incorrect_guesses
+  attr_writer :word, :revealed_word, :incorrect_guesses, :number_of_attempts
 
   def random_word_from_file(filename)
     file = File.open(filename)
@@ -44,8 +45,50 @@ class Hangman
   def begin_game
     puts "Welcome to Hangman!"
     puts ""
-    puts "A random word has been chosen."
-    puts ""
+    puts "Checking if a save file exists..."
+
+    if File.exist? "saves/save"
+      puts "A save file has been found. "
+      puts ""
+
+      input = ""
+      loop do
+        print "Would you like to load file? (y/n): "
+        input = gets.chomp.downcase
+        puts ""
+  
+        break if input == "y" || input == "n"
+  
+        puts "Invalid Entry! Try again."
+        puts ""
+      end
+
+      if input == "y"
+        object = nil
+        File.open("saves/save") do |f|
+          object = Marshal.load(f)
+        end
+
+        self.word = object.word
+        self.revealed_word = object.revealed_word
+        self.incorrect_guesses = object.incorrect_guesses
+        self.number_of_attempts = object.number_of_attempts
+
+        puts "Save file loaded."
+        puts ""        
+      elsif input == "n"
+        puts "Save file not loaded."
+        puts ""
+        puts "A random word has been chosen."
+        puts ""
+      end
+
+    else
+      puts "Save file not found."
+      puts ""
+      puts "A random word has been chosen."
+      puts ""
+    end
   end
 
   def update_display
@@ -60,14 +103,21 @@ class Hangman
 
     # take user input, prevent duplicate or invalid entries
     loop do
-      print "Make your guess: "
+      print "Make your guess (sq - save and quit): "
       guess = gets.chomp.downcase
       puts ""
+
+      if guess == "sq"
+        save_game
+        exit
+      end
+
       break unless revealed_word.include?(guess) || 
                 revealed_word.include?(guess.upcase) ||
                 incorrect_guesses.include?(guess) || 
                 guess.length != 1 || 
-                !(guess =~ /[a-z]/) 
+                !(guess =~ /[a-z]/)
+
       puts "Invalid Entry! Try again."
 			puts ""
     end
@@ -102,6 +152,14 @@ class Hangman
 
     puts "The word is \"#{word.join}\""
   end
+
+  def save_game
+    Dir.mkdir("saves") unless Dir.exists? "saves"
+    File.open("saves/save", "w+") do |f|
+      Marshal.dump(self, f)
+    end
+  end
+
 end
 
 hangman = Hangman.new("5desk.txt", 8)
